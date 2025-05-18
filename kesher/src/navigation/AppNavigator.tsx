@@ -21,11 +21,10 @@ import BuddyChatScreen from '../screens/BuddyChatScreen';
 import { colors } from '../utils/theme';
 
 // Define types for navigators
-type RootStackParamList = {
+export type RootStackParamList = {
   Onboarding: undefined;
   Main: undefined;
   Notifications: undefined;
-  BuddyChat: undefined;
 };
 
 type MainTabParamList = {

@@ -13,6 +13,10 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../navigation/AppNavigator';
+=======
 import { useNavigation } from '@react-navigation/native';
 
 import { colors, typography, spacing, borders, shadows } from '../utils/theme';
@@ -23,6 +27,9 @@ import { addMessage, BuddyMessage } from '../services/slices/buddySlice';
 
 const BuddyChatScreen = () => {
   const dispatch = useDispatch();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'BuddyChat'>>();
+=======
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
@@ -31,6 +38,11 @@ const BuddyChatScreen = () => {
     (state: RootState) => state.buddy
   );
 
+  const buddyId = route.params?.buddyId ?? selectedBuddyId;
+
+  const buddy = buddies.find((b) => b.id === buddyId) ?? null;
+  const buddyMessages = messages.filter((m) => m.buddyId === buddyId);
+=======
   const buddy = buddies.find((b) => b.id === selectedBuddyId);
   const buddyMessages = messages.filter((m) => m.buddyId === selectedBuddyId);
 
@@ -44,6 +56,12 @@ const BuddyChatScreen = () => {
   }, [navigation, buddy]);
 
   const handleSend = () => {
+    if (!inputText.trim() || !buddyId) return;
+
+    const newMessage: Omit<BuddyMessage, 'timestamp' | 'isRead'> = {
+      id: Date.now().toString(),
+      buddyId,
+=======
     if (!inputText.trim() || !selectedBuddyId) return;
 
     const newMessage: Omit<BuddyMessage, 'timestamp' | 'isRead'> = {
@@ -155,6 +173,8 @@ const BuddyChatScreen = () => {
             onPress={() => {
               const sosMessage: Omit<BuddyMessage, 'timestamp' | 'isRead'> = {
                 id: Date.now().toString(),
+                buddyId: buddyId || 'unknown',
+=======
                 buddyId: selectedBuddyId || 'unknown',
                 senderId: 'system',
                 text: t('chat.supportReady'),

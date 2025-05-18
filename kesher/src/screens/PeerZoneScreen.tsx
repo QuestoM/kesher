@@ -11,6 +11,8 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../navigation/AppNavigator';
 
 import { colors, typography, spacing, borders, shadows } from '../utils/theme';
 import { t } from '../utils/i18n';
@@ -28,7 +30,7 @@ import { addNotification } from '../services/slices/notificationsSlice';
 
 const PeerZoneScreen = () => {
   const dispatch = useDispatch();
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
 
@@ -113,7 +115,6 @@ const PeerZoneScreen = () => {
       );
 
       dispatch(setSelectedBuddy(selectedBuddyForAlert.id));
-
     }
 
     // If user chose not to alert or no buddy selected, simply close modal
