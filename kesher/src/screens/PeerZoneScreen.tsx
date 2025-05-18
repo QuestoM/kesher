@@ -12,6 +12,8 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../navigation/AppNavigator';
 
 import { colors, typography, spacing, borders, shadows } from '../utils/theme';
 import { t } from '../utils/i18n';
@@ -49,7 +51,7 @@ const dummyBuddies: Buddy[] = [
 
 const PeerZoneScreen = () => {
   const dispatch = useDispatch();
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
   
@@ -109,8 +111,10 @@ const PeerZoneScreen = () => {
     if (accept && selectedBuddyForAlert) {
       // Navigate to chat with this buddy
       dispatch(setSelectedBuddy(selectedBuddyForAlert.id));
-      // Would navigate to a buddy-specific chat in a real app
-      navigation.navigate('Chat' as never);
+      // Navigate to dedicated buddy chat screen
+      navigation.navigate('BuddyChat', {
+        buddyId: selectedBuddyForAlert.id,
+      });
     }
   };
 

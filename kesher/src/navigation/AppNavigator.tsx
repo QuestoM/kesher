@@ -15,15 +15,17 @@ import MoralInjuryScreen from '../screens/MoralInjuryScreen';
 import ReflexAIScreen from '../screens/ReflexAIScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import NotificationsScreen from '../screens/NotificationsScreen';
+import BuddyChatScreen from '../screens/BuddyChatScreen';
 
 // Theme colors
 import { colors } from '../utils/theme';
 
 // Define types for navigators
-type RootStackParamList = {
+export type RootStackParamList = {
   Onboarding: undefined;
   Main: undefined;
   Notifications: undefined;
+  BuddyChat: { buddyId?: string } | undefined;
 };
 
 type MainTabParamList = {
@@ -134,9 +136,17 @@ const AppNavigator = () => {
     >
       <Stack.Screen name="Onboarding" component={OnboardingScreen} />
       <Stack.Screen name="Main" component={MainTabNavigator} />
-      <Stack.Screen 
-        name="Notifications" 
-        component={NotificationsScreen} 
+      <Stack.Screen
+        name="BuddyChat"
+        component={BuddyChatScreen}
+        options={{
+          headerShown: true,
+          title: '',
+        }}
+      />
+      <Stack.Screen
+        name="Notifications"
+        component={NotificationsScreen}
         options={{
           headerShown: true,
           title: t('notifications.center'),
