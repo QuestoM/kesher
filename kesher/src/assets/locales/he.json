@@ -62,7 +62,11 @@
     "peerAlertOptions": {
       "talk": "בוא נדבר",
       "notNow": "לא עכשיו"
-    }
+    },
+    "addBuddy": "הוסף חבר",
+    "addBuddyName": "שם החבר",
+    "addBuddyPhone": "מספר טלפון",
+    "addBuddySubmit": "הוסף"
   },
   "moralInjury": {
     "title": "מרחב מוסרי",
