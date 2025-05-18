@@ -113,7 +113,7 @@ const PeerZoneScreen = () => {
       );
 
       dispatch(setSelectedBuddy(selectedBuddyForAlert.id));
-      navigation.navigate('Chat' as never);
+
     }
 
     // If user chose not to alert or no buddy selected, simply close modal
