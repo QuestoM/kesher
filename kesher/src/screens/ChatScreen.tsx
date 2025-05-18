@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   useColorScheme,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -36,56 +37,93 @@ const ChatScreen = () => {
   ]);
   
   const [inputText, setInputText] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const flatListRef = useRef<FlatList>(null);
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
 
-  // Send message
-  const handleSend = () => {
-    if (!inputText.trim()) return;
+  /**
+   * Send the user's text to the OpenAI chat API and return the assistant's reply.
+   * Endpoint: https://api.openai.com/v1/chat/completions
+   * Example request body:
+   * {
+   *   model: 'gpt-3.5-turbo',
+   *   messages: [
+   *     { role: 'system', content: 'You are a supportive friend responding in Hebrew.' },
+   *     { role: 'user', content: userText }
+   *   ]
+   * }
+   */
+  const fetchAIResponse = async (userText: string): Promise<string> => {
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      console.warn('OPENAI_API_KEY is not set');
+      throw new Error('Missing API key');
+    }
 
-    // Add user message
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: 'gpt-3.5-turbo',
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a supportive friend responding in Hebrew.',
+          },
+          { role: 'user', content: userText },
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();
+    return data.choices?.[0]?.message?.content?.trim() ?? '';
+  };
+
+  // Send message
+  const handleSend = async () => {
+    if (!inputText.trim() || isLoading) return;
+
+    const text = inputText.trim();
+
     const userMessage: Message = {
       id: Date.now().toString(),
-      text: inputText.trim(),
+      text,
       isUser: true,
       timestamp: Date.now(),
     };
 
     setMessages((prevMessages) => [...prevMessages, userMessage]);
     setInputText('');
+    setIsLoading(true);
 
-    // Simulate AI response (would be replaced with actual API call)
-    setTimeout(() => {
-      // Simulate typing
-      let aiResponse = '';
-      
-      // Simple pattern matching for demo purposes
-      if (inputText.toLowerCase().includes('שלום') || inputText.toLowerCase().includes('היי')) {
-        aiResponse = 'היי אחי, מה קורה? איך אתה מרגיש היום?';
-      } else if (
-        inputText.toLowerCase().includes('עצוב') || 
-        inputText.toLowerCase().includes('קשה') ||
-        inputText.toLowerCase().includes('עייף')
-      ) {
-        aiResponse = 'אני מבין שקשה לך עכשיו. אתה רוצה לדבר על מה שמטריד אותך?';
-      } else if (inputText.toLowerCase().includes('שינה') || inputText.toLowerCase().includes('לישון')) {
-        aiResponse = 'שינה טובה היא חלק חשוב מהחוסן האישי. אתה מתקשה לישון לאחרונה?';
-      } else if (inputText.toLowerCase().includes('חבר') || inputText.toLowerCase().includes('בודד')) {
-        aiResponse = 'חברים הם חלק משמעותי מהתמיכה שלנו. אולי כדאי לפנות לאחד הבאדיז שלך?';
-      } else {
-        aiResponse = 'תודה ששיתפת. אתה רוצה להמשיך לדבר על זה או שיש משהו אחר שמעסיק אותך?';
-      }
-
+    try {
+      const aiText = await fetchAIResponse(text);
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: aiResponse,
+        text: aiText,
         isUser: false,
         timestamp: Date.now(),
       };
-
       setMessages((prevMessages) => [...prevMessages, aiMessage]);
-    }, 1000);
+    } catch (error) {
+      const fallback: Message = {
+        id: (Date.now() + 1).toString(),
+        text: 'מצטער, לא הצלחתי לקבל תשובה.',
+        isUser: false,
+        timestamp: Date.now(),
+      };
+      setMessages((prevMessages) => [...prevMessages, fallback]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Format timestamp
@@ -160,25 +198,33 @@ const ChatScreen = () => {
             placeholder={t('chat.placeholder')}
             placeholderTextColor={isDark ? colors.grayLight : colors.grayDark}
             multiline
+            editable={!isLoading}
           />
           
           <TouchableOpacity
             style={[
               styles.sendButton,
               {
-                backgroundColor: inputText.trim() 
-                  ? colors.accent 
-                  : isDark ? colors.darkBorder : colors.lightBorder,
+                backgroundColor:
+                  inputText.trim() && !isLoading
+                    ? colors.accent
+                    : isDark
+                    ? colors.darkBorder
+                    : colors.lightBorder,
               },
             ]}
             onPress={handleSend}
-            disabled={!inputText.trim()}
+            disabled={!inputText.trim() || isLoading}
           >
-            <Ionicons
-              name="send"
-              size={24}
-              color={inputText.trim() ? colors.lightText : colors.grayDark}
-            />
+            {isLoading ? (
+              <ActivityIndicator color={colors.lightText} />
+            ) : (
+              <Ionicons
+                name="send"
+                size={24}
+                color={inputText.trim() ? colors.lightText : colors.grayDark}
+              />
+            )}
           </TouchableOpacity>
         </View>
 

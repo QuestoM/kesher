@@ -27,6 +27,12 @@
 npm install
 ```
 
+הגדר את מפתח ה-OpenAI כמשתנה סביבה `OPENAI_API_KEY` (למשל בקובץ `.env` שאינו מנוהל ב‑git):
+
+```bash
+echo "OPENAI_API_KEY=your-key" > .env
+```
+
 הרץ את האפליקציה:
 
 ```bash
