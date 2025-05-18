@@ -8,12 +8,17 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import { StackNavigationProp } from '@react-navigation/stack';
+import * as Notifications from 'expo-notifications';
 
 import Button from '../components/Button';
 import { colors, typography, spacing } from '../utils/theme';
 import { t } from '../utils/i18n';
 import { setOnboarded } from '../services/slices/userSlice';
 import { setHealthPermission } from '../services/slices/healthSlice';
+import {
+  setPermissionGranted,
+  setPushToken,
+} from '../services/slices/notificationsSlice';
 
 const OnboardingScreen = () => {
   const [step, setStep] = useState(0);
@@ -39,12 +44,25 @@ const OnboardingScreen = () => {
     },
   ];
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (step === 1) {
       // Grant health permission in a real app this would request permissions
       dispatch(setHealthPermission(true));
     }
-    
+
+    if (step === steps.length - 1) {
+      try {
+        const { status } = await Notifications.requestPermissionsAsync();
+        if (status === 'granted') {
+          dispatch(setPermissionGranted(true));
+          const tokenData = await Notifications.getExpoPushTokenAsync();
+          dispatch(setPushToken(tokenData.data));
+        }
+      } catch (error) {
+        console.log('Notification permission error', error);
+      }
+    }
+
     if (step < steps.length - 1) {
       setStep(step + 1);
     } else {
