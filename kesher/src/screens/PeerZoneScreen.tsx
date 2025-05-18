@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   Modal,
+  TextInput,
   useColorScheme,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
@@ -17,7 +18,7 @@ import { colors, typography, spacing, borders, shadows } from '../utils/theme';
 import { t } from '../utils/i18n';
 import Button from '../components/Button';
 import { RootState } from '../services/store';
-import { Buddy, BuddyStatus, setSelectedBuddy } from '../services/slices/buddySlice';
+import { Buddy, BuddyStatus, setSelectedBuddy, addBuddy } from '../services/slices/buddySlice';
 
 // Placeholder data
 const dummyBuddies: Buddy[] = [
@@ -52,10 +53,17 @@ const PeerZoneScreen = () => {
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
-  
+
+  const buddies = useSelector((state: RootState) => state.buddy.buddies);
+
   // State for alert modal
   const [alertModalVisible, setAlertModalVisible] = useState(false);
   const [selectedBuddyForAlert, setSelectedBuddyForAlert] = useState<Buddy | null>(null);
+
+  // State for add buddy modal
+  const [addModalVisible, setAddModalVisible] = useState(false);
+  const [newBuddyName, setNewBuddyName] = useState('');
+  const [newBuddyPhone, setNewBuddyPhone] = useState('');
 
   // Get current user status from Redux store
   // For now we'll use local state
@@ -242,7 +250,7 @@ const PeerZoneScreen = () => {
 
       {/* Buddy list */}
       <FlatList
-        data={dummyBuddies}
+        data={[...dummyBuddies, ...buddies]}
         renderItem={renderBuddyItem}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.buddyList}
@@ -255,11 +263,91 @@ const PeerZoneScreen = () => {
           { backgroundColor: colors.accent },
         ]}
         onPress={() => {
-          // Would navigate to add buddy screen
+          setAddModalVisible(true);
         }}
       >
         <Ionicons name="add" size={24} color={colors.lightText} />
       </TouchableOpacity>
+
+      {/* Add Buddy Modal */}
+      <Modal
+        visible={addModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setAddModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View
+            style={[
+              styles.modalContent,
+              { backgroundColor: isDark ? colors.darkBackground : colors.lightBackground },
+            ]}
+          >
+            <View style={styles.modalHeader}>
+              <Text style={[styles.modalTitle, { color: isDark ? colors.lightText : colors.darkText }]}>
+                {t('peerZone.addBuddy')}
+              </Text>
+            </View>
+            <TextInput
+              style={[
+                styles.modalInput,
+                {
+                  backgroundColor: isDark ? '#1E1E1E' : '#F5F5F5',
+                  borderColor: isDark ? colors.darkBorder : colors.lightBorder,
+                  color: isDark ? colors.lightText : colors.darkText,
+                },
+              ]}
+              placeholder={t('peerZone.addBuddyName')}
+              placeholderTextColor={isDark ? colors.grayLight : colors.grayDark}
+              value={newBuddyName}
+              onChangeText={setNewBuddyName}
+            />
+            <TextInput
+              style={[
+                styles.modalInput,
+                {
+                  backgroundColor: isDark ? '#1E1E1E' : '#F5F5F5',
+                  borderColor: isDark ? colors.darkBorder : colors.lightBorder,
+                  color: isDark ? colors.lightText : colors.darkText,
+                },
+              ]}
+              placeholder={t('peerZone.addBuddyPhone')}
+              placeholderTextColor={isDark ? colors.grayLight : colors.grayDark}
+              value={newBuddyPhone}
+              onChangeText={setNewBuddyPhone}
+              keyboardType="phone-pad"
+            />
+            <View style={styles.alertButtons}>
+              <Button
+                title={t('peerZone.addBuddySubmit')}
+                onPress={() => {
+                  if (!newBuddyName.trim() || !newBuddyPhone.trim()) return;
+                  const newBuddy: Buddy = {
+                    id: Date.now().toString(),
+                    name: newBuddyName.trim(),
+                    phoneNumber: newBuddyPhone.trim(),
+                    status: 'offline',
+                    lastActive: new Date().toISOString(),
+                    isPrimary: false,
+                  };
+                  dispatch(addBuddy(newBuddy));
+                  setAddModalVisible(false);
+                  setNewBuddyName('');
+                  setNewBuddyPhone('');
+                }}
+                variant="primary"
+                style={styles.alertButton}
+              />
+              <Button
+                title={t('common.cancel')}
+                onPress={() => setAddModalVisible(false)}
+                variant="outline"
+                style={styles.alertButton}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
 
       {/* Alert Modal */}
       <Modal
@@ -490,6 +578,14 @@ const styles = StyleSheet.create({
   },
   alertButton: {
     marginBottom: spacing.sm,
+  },
+  modalInput: {
+    borderWidth: 1,
+    borderRadius: borders.radius.md,
+    padding: spacing.sm,
+    marginBottom: spacing.sm,
+    fontFamily: typography.fontFamily.regular,
+    fontSize: typography.fontSize.md,
   },
 });
 

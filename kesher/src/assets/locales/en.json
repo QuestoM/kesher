@@ -62,7 +62,11 @@
     "peerAlertOptions": {
       "talk": "Let's Talk",
       "notNow": "Not Now"
-    }
+    },
+    "addBuddy": "Add Buddy",
+    "addBuddyName": "Friend's Name",
+    "addBuddyPhone": "Phone Number",
+    "addBuddySubmit": "Add"
   },
   "moralInjury": {
     "title": "Moral Space",
