@@ -1,0 +1,103 @@
+{
+  "common": {
+    "appName": "Kesher",
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "save": "Save",
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish",
+    "close": "Close"
+  },
+  "onboarding": {
+    "welcome": "Welcome to Kesher",
+    "welcomeSubtitle": "An app that connects warriors and maintains relationships",
+    "healthPermission": "Health Permissions",
+    "healthPermissionDesc": "Kesher needs access to your health data to help maintain your personal resilience",
+    "buddySelection": "Buddy Selection",
+    "buddySelectionDesc": "Choose a friend who will be there when needed",
+    "notificationPermission": "Notification Permissions",
+    "notificationPermissionDesc": "Allow us to notify you when a friend needs support",
+    "getStarted": "Let's Get Started"
+  },
+  "home": {
+    "checkIn": "How are you feeling today?",
+    "streak": "{{count}} day streak!",
+    "sleepCard": "Your Sleep",
+    "sleepCardHours": "{{hours}} hours",
+    "sleepCardQuality": "Quality: {{quality}}",
+    "checkInOptions": {
+      "great": "Great",
+      "good": "Good",
+      "okay": "Okay",
+      "notGood": "Not Good",
+      "bad": "Bad"
+    }
+  },
+  "notifications": {
+    "newCheckIn": "You crossed our mind, how are you?",
+    "buddySupport": "Your friend would like to talk to you",
+    "sleepAlert": "We've noticed you're sleeping less than usual",
+    "center": "Notification Center"
+  },
+  "chat": {
+    "title": "Chat",
+    "placeholder": "Type a message...",
+    "send": "Send",
+    "supportReady": "We're here for you",
+    "startChat": "Want to talk?",
+    "sos": "SOS"
+  },
+  "peerZone": {
+    "title": "Friends",
+    "buddyStatus": {
+      "online": "Available",
+      "offline": "Unavailable",
+      "busy": "Busy"
+    },
+    "checkBuddy": "Check on them",
+    "peerAlert": "A friend needs you",
+    "peerAlertOptions": {
+      "talk": "Let's Talk",
+      "notNow": "Not Now"
+    }
+  },
+  "moralInjury": {
+    "title": "Moral Space",
+    "storyBuilder": "What's bothering you?",
+    "storyPlaceholder": "Share what you're going through...",
+    "groupRoom": "Group Room",
+    "anonymousMode": "Anonymous Mode"
+  },
+  "reflexAI": {
+    "title": "Simulations",
+    "simulation1": "Silent Friend",
+    "simulation2": "Anger Outburst",
+    "simulation3": "Screen Staring",
+    "startSimulation": "Start Simulation",
+    "xpGained": "+{{xp}} XP"
+  },
+  "profile": {
+    "title": "Profile",
+    "personalDetails": "Personal Details",
+    "name": "Name",
+    "phoneNumber": "Phone Number",
+    "unit": "Unit",
+    "settings": "Settings",
+    "darkMode": "Dark Mode",
+    "language": "Language",
+    "notifications": "Notifications",
+    "privacy": "Privacy",
+    "dataExport": "Export Data",
+    "logout": "Logout",
+    "deleteAccount": "Delete Account"
+  },
+  "badges": {
+    "sleepStreak": "Week of Good Sleep",
+    "checkInStreak": "5 Consecutive Check-ins",
+    "supportiveBuddy": "Supportive Buddy",
+    "reflexMaster": "Simulation Master"
+  }
+} 

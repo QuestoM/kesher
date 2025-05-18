@@ -1,0 +1,58 @@
+{
+  "expo": {
+    "name": "קשר",
+    "slug": "kesher",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./src/assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./src/assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#4E5D52"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.kesher.app",
+      "buildNumber": "1.0.0",
+      "infoPlist": {
+        "NSHealthShareUsageDescription": "קשר צריכה גישה לנתוני הבריאות שלך כדי לנטר את דפוסי השינה והפעילות הגופנית להערכת החוסן האישי"
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./src/assets/adaptive-icon.png",
+        "backgroundColor": "#4E5D52"
+      },
+      "package": "com.kesher.app",
+      "versionCode": 1,
+      "permissions": [
+        "ACCESS_BACKGROUND_LOCATION",
+        "NOTIFICATIONS"
+      ]
+    },
+    "web": {
+      "favicon": "./src/assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./src/assets/notification-icon.png",
+          "color": "#4E5D52"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "kesher-app"
+      }
+    }
+  }
+} 

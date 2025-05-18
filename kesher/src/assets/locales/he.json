@@ -1,0 +1,103 @@
+{
+  "common": {
+    "appName": "קשר",
+    "loading": "טוען...",
+    "error": "שגיאה",
+    "retry": "נסה שוב",
+    "cancel": "ביטול",
+    "save": "שמור",
+    "back": "חזור",
+    "next": "המשך",
+    "finish": "סיום",
+    "close": "סגור"
+  },
+  "onboarding": {
+    "welcome": "ברוך הבא לקשר",
+    "welcomeSubtitle": "אפליקציה שמחברת בין לוחמים ושומרת על הקשר",
+    "healthPermission": "הרשאות בריאות",
+    "healthPermissionDesc": "קשר צריכה גישה לנתוני הבריאות שלך כדי לסייע בשמירה על החוסן האישי",
+    "buddySelection": "בחירת באדי",
+    "buddySelectionDesc": "בחר חבר שיהיה איתך כשצריך",
+    "notificationPermission": "הרשאות התראות",
+    "notificationPermissionDesc": "אפשר לנו לעדכן אותך כשחבר צריך תמיכה",
+    "getStarted": "יאללה, בוא נתחיל"
+  },
+  "home": {
+    "checkIn": "איך אתה מרגיש היום?",
+    "streak": "רצף של {{count}} ימים!",
+    "sleepCard": "השינה שלך",
+    "sleepCardHours": "{{hours}} שעות",
+    "sleepCardQuality": "איכות: {{quality}}",
+    "checkInOptions": {
+      "great": "מעולה",
+      "good": "טוב",
+      "okay": "בסדר",
+      "notGood": "לא טוב",
+      "bad": "קשה"
+    }
+  },
+  "notifications": {
+    "newCheckIn": "קפצת לנו לראש, איך אתה?",
+    "buddySupport": "חבר שלך היה רוצה לדבר איתך",
+    "sleepAlert": "שמנו לב שאתה ישן פחות מהרגיל",
+    "center": "מרכז ההודעות"
+  },
+  "chat": {
+    "title": "שיחה",
+    "placeholder": "כתוב הודעה...",
+    "send": "שלח",
+    "supportReady": "אנחנו כאן בשבילך",
+    "startChat": "רוצה לדבר?",
+    "sos": "SOS"
+  },
+  "peerZone": {
+    "title": "חברים",
+    "buddyStatus": {
+      "online": "זמין",
+      "offline": "לא זמין",
+      "busy": "עסוק"
+    },
+    "checkBuddy": "בדוק אותו",
+    "peerAlert": "חבר צריך אותך",
+    "peerAlertOptions": {
+      "talk": "בוא נדבר",
+      "notNow": "לא עכשיו"
+    }
+  },
+  "moralInjury": {
+    "title": "מרחב מוסרי",
+    "storyBuilder": "מה מציק לך?",
+    "storyPlaceholder": "שתף את מה שעובר עליך...",
+    "groupRoom": "חדר קבוצתי",
+    "anonymousMode": "מצב אנונימי"
+  },
+  "reflexAI": {
+    "title": "סימולציות",
+    "simulation1": "חבר בשקט",
+    "simulation2": "התפרצות זעם",
+    "simulation3": "בהייה במסך",
+    "startSimulation": "התחל סימולציה",
+    "xpGained": "+{{xp}} XP"
+  },
+  "profile": {
+    "title": "פרופיל",
+    "personalDetails": "פרטים אישיים",
+    "name": "שם",
+    "phoneNumber": "מספר טלפון",
+    "unit": "יחידה",
+    "settings": "הגדרות",
+    "darkMode": "מצב כהה",
+    "language": "שפה",
+    "notifications": "התראות",
+    "privacy": "פרטיות",
+    "dataExport": "ייצוא נתונים",
+    "logout": "התנתק",
+    "deleteAccount": "מחק חשבון"
+  },
+  "badges": {
+    "sleepStreak": "שבוע שינה טובה",
+    "checkInStreak": "5 צ'ק-אינים רצופים",
+    "supportiveBuddy": "חבר תומך",
+    "reflexMaster": "מאסטר הסימולציות"
+  }
+} 
