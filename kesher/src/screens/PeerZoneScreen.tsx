@@ -5,7 +5,6 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
-  Image,
   Modal,
   useColorScheme,
 } from 'react-native';
@@ -19,39 +18,15 @@ import Button from '../components/Button';
 import { RootState } from '../services/store';
 import { Buddy, BuddyStatus, setSelectedBuddy } from '../services/slices/buddySlice';
 
-// Placeholder data
-const dummyBuddies: Buddy[] = [
-  {
-    id: '1',
-    name: 'יואב כהן',
-    phoneNumber: '050-1234567',
-    status: 'online',
-    lastActive: new Date().toISOString(),
-    isPrimary: true,
-  },
-  {
-    id: '2',
-    name: 'עידן לוי',
-    phoneNumber: '052-7654321',
-    status: 'offline',
-    lastActive: new Date(Date.now() - 3600000 * 3).toISOString(), // 3 hours ago
-    isPrimary: false,
-  },
-  {
-    id: '3',
-    name: 'נועה ישראלי',
-    phoneNumber: '054-9876543',
-    status: 'busy',
-    lastActive: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
-    isPrimary: false,
-  },
-];
 
 const PeerZoneScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
+
+  // Buddies from Redux state
+  const buddies = useSelector((state: RootState) => state.buddy.buddies);
   
   // State for alert modal
   const [alertModalVisible, setAlertModalVisible] = useState(false);
@@ -242,7 +217,7 @@ const PeerZoneScreen = () => {
 
       {/* Buddy list */}
       <FlatList
-        data={dummyBuddies}
+        data={buddies}
         renderItem={renderBuddyItem}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.buddyList}
