@@ -10,6 +10,7 @@ import { t } from '../utils/i18n';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import HomeScreen from '../screens/HomeScreen';
 import ChatScreen from '../screens/ChatScreen';
+import BuddyChatScreen from '../screens/BuddyChatScreen';
 import PeerZoneScreen from '../screens/PeerZoneScreen';
 import MoralInjuryScreen from '../screens/MoralInjuryScreen';
 import ReflexAIScreen from '../screens/ReflexAIScreen';
@@ -24,6 +25,7 @@ type RootStackParamList = {
   Onboarding: undefined;
   Main: undefined;
   Notifications: undefined;
+  BuddyChat: undefined;
 };
 
 type MainTabParamList = {
@@ -134,12 +136,20 @@ const AppNavigator = () => {
     >
       <Stack.Screen name="Onboarding" component={OnboardingScreen} />
       <Stack.Screen name="Main" component={MainTabNavigator} />
-      <Stack.Screen 
-        name="Notifications" 
-        component={NotificationsScreen} 
+      <Stack.Screen
+        name="Notifications"
+        component={NotificationsScreen}
         options={{
           headerShown: true,
           title: t('notifications.center'),
+        }}
+      />
+      <Stack.Screen
+        name="BuddyChat"
+        component={BuddyChatScreen}
+        options={{
+          headerShown: true,
+          title: t('chat.title'),
         }}
       />
     </Stack.Navigator>

@@ -109,8 +109,8 @@ const PeerZoneScreen = () => {
     if (accept && selectedBuddyForAlert) {
       // Navigate to chat with this buddy
       dispatch(setSelectedBuddy(selectedBuddyForAlert.id));
-      // Would navigate to a buddy-specific chat in a real app
-      navigation.navigate('Chat' as never);
+      // Navigate to buddy chat screen
+      navigation.navigate('BuddyChat' as never);
     }
   };
 
