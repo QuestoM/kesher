@@ -25,7 +25,6 @@ export type RootStackParamList = {
   Onboarding: undefined;
   Main: undefined;
   Notifications: undefined;
-  BuddyChat: { buddyId?: string } | undefined;
 };
 
 type MainTabParamList = {

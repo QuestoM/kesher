@@ -5,7 +5,6 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
-  Image,
   Modal,
   useColorScheme,
 } from 'react-native';
@@ -19,41 +18,24 @@ import { colors, typography, spacing, borders, shadows } from '../utils/theme';
 import { t } from '../utils/i18n';
 import Button from '../components/Button';
 import { RootState } from '../services/store';
-import { Buddy, BuddyStatus, setSelectedBuddy } from '../services/slices/buddySlice';
+import {
+  Buddy,
+  BuddyStatus,
+  setSelectedBuddy,
+  addAlert,
+  respondToAlert,
+} from '../services/slices/buddySlice';
+import { addNotification } from '../services/slices/notificationsSlice';
 
-// Placeholder data
-const dummyBuddies: Buddy[] = [
-  {
-    id: '1',
-    name: 'יואב כהן',
-    phoneNumber: '050-1234567',
-    status: 'online',
-    lastActive: new Date().toISOString(),
-    isPrimary: true,
-  },
-  {
-    id: '2',
-    name: 'עידן לוי',
-    phoneNumber: '052-7654321',
-    status: 'offline',
-    lastActive: new Date(Date.now() - 3600000 * 3).toISOString(), // 3 hours ago
-    isPrimary: false,
-  },
-  {
-    id: '3',
-    name: 'נועה ישראלי',
-    phoneNumber: '054-9876543',
-    status: 'busy',
-    lastActive: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
-    isPrimary: false,
-  },
-];
 
 const PeerZoneScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
+
+  // Buddies from Redux state
+  const buddies = useSelector((state: RootState) => state.buddy.buddies);
   
   // State for alert modal
   const [alertModalVisible, setAlertModalVisible] = useState(false);
@@ -105,17 +87,37 @@ const PeerZoneScreen = () => {
 
   // Handle alert response
   const handleAlertResponse = (accept: boolean) => {
-    // In a real app, this would send a notification to the buddy
     setAlertModalVisible(false);
-    
-    if (accept && selectedBuddyForAlert) {
-      // Navigate to chat with this buddy
+
+    if (selectedBuddyForAlert && accept) {
+      const alertId = Date.now().toString();
+
+      // Record alert in Redux
+      dispatch(
+        addAlert({
+          id: alertId,
+          buddyId: selectedBuddyForAlert.id,
+          message: t('peerZone.peerAlert'),
+        })
+      );
+
+      // Simulate buddy accepting immediately
+      dispatch(respondToAlert({ id: alertId, responseType: 'accepted' }));
+
+      // Notify user locally that buddy accepted
+      dispatch(
+        addNotification({
+          id: `${alertId}-notify`,
+          type: 'buddySupport',
+          title: `${selectedBuddyForAlert.name} רוצה לדבר`,
+          message: t('notifications.buddySupport'),
+        })
+      );
+
       dispatch(setSelectedBuddy(selectedBuddyForAlert.id));
-      // Navigate to dedicated buddy chat screen
-      navigation.navigate('BuddyChat', {
-        buddyId: selectedBuddyForAlert.id,
-      });
     }
+
+    // If user chose not to alert or no buddy selected, simply close modal
   };
 
   // Render buddy item
@@ -246,7 +248,7 @@ const PeerZoneScreen = () => {
 
       {/* Buddy list */}
       <FlatList
-        data={dummyBuddies}
+        data={buddies}
         renderItem={renderBuddyItem}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.buddyList}

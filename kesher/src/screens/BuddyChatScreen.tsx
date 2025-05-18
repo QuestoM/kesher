@@ -16,6 +16,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
+=======
+import { useNavigation } from '@react-navigation/native';
 
 import { colors, typography, spacing, borders, shadows } from '../utils/theme';
 import { t } from '../utils/i18n';
@@ -27,6 +29,8 @@ const BuddyChatScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route = useRoute<RouteProp<RootStackParamList, 'BuddyChat'>>();
+=======
+  const navigation = useNavigation();
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
 
@@ -38,6 +42,9 @@ const BuddyChatScreen = () => {
 
   const buddy = buddies.find((b) => b.id === buddyId) ?? null;
   const buddyMessages = messages.filter((m) => m.buddyId === buddyId);
+=======
+  const buddy = buddies.find((b) => b.id === selectedBuddyId);
+  const buddyMessages = messages.filter((m) => m.buddyId === selectedBuddyId);
 
   const [inputText, setInputText] = useState('');
   const flatListRef = useRef<FlatList>(null);
@@ -54,6 +61,12 @@ const BuddyChatScreen = () => {
     const newMessage: Omit<BuddyMessage, 'timestamp' | 'isRead'> = {
       id: Date.now().toString(),
       buddyId,
+=======
+    if (!inputText.trim() || !selectedBuddyId) return;
+
+    const newMessage: Omit<BuddyMessage, 'timestamp' | 'isRead'> = {
+      id: Date.now().toString(),
+      buddyId: selectedBuddyId,
       senderId: 'me',
       text: inputText.trim(),
     };
@@ -161,6 +174,8 @@ const BuddyChatScreen = () => {
               const sosMessage: Omit<BuddyMessage, 'timestamp' | 'isRead'> = {
                 id: Date.now().toString(),
                 buddyId: buddyId || 'unknown',
+=======
+                buddyId: selectedBuddyId || 'unknown',
                 senderId: 'system',
                 text: t('chat.supportReady'),
               };
