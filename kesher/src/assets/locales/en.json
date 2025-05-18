@@ -18,6 +18,8 @@
     "healthPermissionDesc": "Kesher needs access to your health data to help maintain your personal resilience",
     "buddySelection": "Buddy Selection",
     "buddySelectionDesc": "Choose a friend who will be there when needed",
+    "buddyInputPlaceholder": "Friend name or phone",
+    "addBuddy": "Add Buddy",
     "notificationPermission": "Notification Permissions",
     "notificationPermissionDesc": "Allow us to notify you when a friend needs support",
     "getStarted": "Let's Get Started"

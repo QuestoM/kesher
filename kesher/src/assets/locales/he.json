@@ -18,6 +18,8 @@
     "healthPermissionDesc": "קשר צריכה גישה לנתוני הבריאות שלך כדי לסייע בשמירה על החוסן האישי",
     "buddySelection": "בחירת באדי",
     "buddySelectionDesc": "בחר חבר שיהיה איתך כשצריך",
+    "buddyInputPlaceholder": "שם או מספר טלפון של חבר",
+    "addBuddy": "הוסף חבר",
     "notificationPermission": "הרשאות התראות",
     "notificationPermissionDesc": "אפשר לנו לעדכן אותך כשחבר צריך תמיכה",
     "getStarted": "יאללה, בוא נתחיל"
