@@ -17,7 +17,14 @@ import { colors, typography, spacing, borders, shadows } from '../utils/theme';
 import { t } from '../utils/i18n';
 import Button from '../components/Button';
 import { RootState } from '../services/store';
-import { Buddy, BuddyStatus, setSelectedBuddy } from '../services/slices/buddySlice';
+import {
+  Buddy,
+  BuddyStatus,
+  setSelectedBuddy,
+  addAlert,
+  respondToAlert,
+} from '../services/slices/buddySlice';
+import { addNotification } from '../services/slices/notificationsSlice';
 
 // Placeholder data
 const dummyBuddies: Buddy[] = [
@@ -103,15 +110,38 @@ const PeerZoneScreen = () => {
 
   // Handle alert response
   const handleAlertResponse = (accept: boolean) => {
-    // In a real app, this would send a notification to the buddy
     setAlertModalVisible(false);
-    
-    if (accept && selectedBuddyForAlert) {
-      // Navigate to chat with this buddy
+
+    if (selectedBuddyForAlert && accept) {
+      const alertId = Date.now().toString();
+
+      // Record alert in Redux
+      dispatch(
+        addAlert({
+          id: alertId,
+          buddyId: selectedBuddyForAlert.id,
+          message: t('peerZone.peerAlert'),
+        })
+      );
+
+      // Simulate buddy accepting immediately
+      dispatch(respondToAlert({ id: alertId, responseType: 'accepted' }));
+
+      // Notify user locally that buddy accepted
+      dispatch(
+        addNotification({
+          id: `${alertId}-notify`,
+          type: 'buddySupport',
+          title: `${selectedBuddyForAlert.name} רוצה לדבר`,
+          message: t('notifications.buddySupport'),
+        })
+      );
+
       dispatch(setSelectedBuddy(selectedBuddyForAlert.id));
-      // Would navigate to a buddy-specific chat in a real app
       navigation.navigate('Chat' as never);
     }
+
+    // If user chose not to alert or no buddy selected, simply close modal
   };
 
   // Render buddy item
