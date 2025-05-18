@@ -13,10 +13,12 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSelector } from 'react-redux';
 
 import { colors, typography, spacing, borders, shadows } from '../utils/theme';
 import { t } from '../utils/i18n';
 import Button from '../components/Button';
+import { RootState } from '../services/store';
 
 // Message interface
 interface Message {
@@ -27,14 +29,29 @@ interface Message {
 }
 
 const ChatScreen = () => {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      text: 'שלום, אנחנו כאן בשבילך. איך אני יכול לעזור לך היום?',
-      isUser: false,
-      timestamp: Date.now() - 60000,
-    },
-  ]);
+  const selectedBuddyId = useSelector(
+    (state: RootState) => state.buddy.selectedBuddyId
+  );
+
+  const [messages, setMessages] = useState<Message[]>(() =>
+    selectedBuddyId
+      ? [
+          {
+            id: '1',
+            text: 'היי, אני כאן – מה קורה?',
+            isUser: false,
+            timestamp: Date.now(),
+          },
+        ]
+      : [
+          {
+            id: '1',
+            text: 'שלום, אנחנו כאן בשבילך. איך אני יכול לעזור לך היום?',
+            isUser: false,
+            timestamp: Date.now() - 60000,
+          },
+        ]
+  );
   
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -104,8 +121,7 @@ const ChatScreen = () => {
     setInputText('');
     setIsLoading(true);
 
-    try {
-      const aiText = await fetchAIResponse(text);
+
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         text: aiText,

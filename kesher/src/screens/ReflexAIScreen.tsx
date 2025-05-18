@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Image,
   Modal,
+  Alert,
   useColorScheme,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -44,6 +44,9 @@ const ReflexAIScreen = () => {
   // Modal state
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedSimulation, setSelectedSimulation] = useState<Simulation | null>(null);
+  const [simulationRunning, setSimulationRunning] = useState(false);
+  const [canFinish, setCanFinish] = useState(false);
+  const progressTimer = useRef<NodeJS.Timeout | null>(null);
   
   // Simulation data
   const simulations: Simulation[] = [
@@ -82,21 +85,40 @@ const ReflexAIScreen = () => {
   // Open simulation modal
   const handleOpenSimulation = (simulation: Simulation) => {
     setSelectedSimulation(simulation);
+    setSimulationRunning(false);
+    setCanFinish(false);
+    if (progressTimer.current) {
+      clearTimeout(progressTimer.current);
+      progressTimer.current = null;
+    }
     setModalVisible(true);
   };
   
   // Start simulation
   const handleStartSimulation = () => {
-    // In a real app, this would start the actual simulation
+    setSimulationRunning(true);
+    setCanFinish(false);
+    if (progressTimer.current) {
+      clearTimeout(progressTimer.current);
+    }
+    progressTimer.current = setTimeout(() => {
+      setCanFinish(true);
+    }, 2000);
+  };
+
+  const handleFinishSimulation = () => {
     setModalVisible(false);
-    
-    // Simulate completion for demo
+    setSimulationRunning(false);
+    setCanFinish(false);
+    if (progressTimer.current) {
+      clearTimeout(progressTimer.current);
+      progressTimer.current = null;
+    }
+
     if (selectedSimulation) {
-      // Add simulation to completed list
       dispatch(addCompletedSimulation(selectedSimulation.id));
-      
-      // Award XP
       dispatch(addXP(selectedSimulation.xpReward));
+      Alert.alert('✅', t('reflexAI.xpGained', { xp: selectedSimulation.xpReward }));
     }
   };
   
@@ -320,27 +342,51 @@ const ReflexAIScreen = () => {
                   </View>
                 </View>
                 
-                <Text
-                  style={[
-                    styles.instructionText,
-                    { color: isDark ? colors.grayLight : colors.grayText },
-                  ]}
-                >
-                  בסימולציה זו תצטרך להשתמש בכישורי ההקשבה והתמיכה שלך כדי לסייע בהתמודדות עם מצב רגיש.
-                  כל תגובה שלך תשפיע על המשך התרחיש.
-                </Text>
-                
-                <Button
-                  title={
-                    selectedSimulation.completed
-                      ? "תרגל שוב"
-                      : t('reflexAI.startSimulation')
-                  }
-                  onPress={handleStartSimulation}
-                  variant="primary"
-                  fullWidth
-                  style={styles.startButton}
-                />
+                {simulationRunning ? (
+                  <>
+                    <Text
+                      style={[
+                        styles.instructionText,
+                        { color: isDark ? colors.grayLight : colors.grayText },
+                      ]}
+                    >
+                      סימולציה מתבצעת...
+                    </Text>
+                    {canFinish && (
+                      <Button
+                        title="סיים סימולציה"
+                        onPress={handleFinishSimulation}
+                        variant="primary"
+                        fullWidth
+                        style={styles.startButton}
+                      />
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <Text
+                      style={[
+                        styles.instructionText,
+                        { color: isDark ? colors.grayLight : colors.grayText },
+                      ]}
+                    >
+                      בסימולציה זו תצטרך להשתמש בכישורי ההקשבה והתמיכה שלך כדי לסייע בהתמודדות עם מצב רגיש.
+                      כל תגובה שלך תשפיע על המשך התרחיש.
+                    </Text>
+
+                    <Button
+                      title={
+                        selectedSimulation.completed
+                          ? "תרגל שוב"
+                          : t('reflexAI.startSimulation')
+                      }
+                      onPress={handleStartSimulation}
+                      variant="primary"
+                      fullWidth
+                      style={styles.startButton}
+                    />
+                  </>
+                )}
               </>
             )}
           </View>

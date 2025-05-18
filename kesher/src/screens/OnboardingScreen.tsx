@@ -1,22 +1,25 @@
 import React, { useState } from 'react';
-import { 
-  View, 
-  Text, 
-  StyleSheet, 
-  SafeAreaView
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  TextInput,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 import Button from '../components/Button';
-import { colors, typography, spacing } from '../utils/theme';
+import { colors, typography, spacing, borders } from '../utils/theme';
 import { t } from '../utils/i18n';
 import { setOnboarded } from '../services/slices/userSlice';
 import { setHealthPermission } from '../services/slices/healthSlice';
+import { addBuddy, Buddy } from '../services/slices/buddySlice';
 
 const OnboardingScreen = () => {
   const [step, setStep] = useState(0);
+  const [buddyValue, setBuddyValue] = useState('');
   const dispatch = useDispatch();
   const navigation = useNavigation<StackNavigationProp<any>>();
 
@@ -57,6 +60,23 @@ const OnboardingScreen = () => {
     }
   };
 
+  const handleAddBuddy = () => {
+    const value = buddyValue.trim();
+    if (!value) return;
+
+    const newBuddy: Buddy = {
+      id: value,
+      name: value,
+      phoneNumber: value,
+      status: 'offline',
+      lastActive: new Date().toISOString(),
+      isPrimary: false,
+    };
+
+    dispatch(addBuddy(newBuddy));
+    setBuddyValue('');
+  };
+
   const currentStep = steps[step];
 
   return (
@@ -78,6 +98,24 @@ const OnboardingScreen = () => {
         <View style={styles.textContainer}>
           <Text style={styles.title}>{currentStep.title}</Text>
           <Text style={styles.description}>{currentStep.description}</Text>
+
+          {step === 2 && (
+            <>
+              <TextInput
+                style={styles.input}
+                value={buddyValue}
+                onChangeText={setBuddyValue}
+                placeholder={t('onboarding.buddyInputPlaceholder')}
+              />
+
+              <Button
+                title={t('onboarding.addBuddy')}
+                onPress={handleAddBuddy}
+                fullWidth
+                style={styles.addBuddyButton}
+              />
+            </>
+          )}
         </View>
 
         <View style={styles.buttonContainer}>
@@ -146,6 +184,21 @@ const styles = StyleSheet.create({
     color: colors.grayText,
     textAlign: 'center',
     lineHeight: typography.lineHeight.md,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: colors.lightBorder,
+    borderRadius: borders.radius.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    width: '100%',
+    marginTop: spacing.md,
+    marginBottom: spacing.sm,
+    fontFamily: typography.fontFamily.regular,
+    fontSize: typography.fontSize.md,
+  },
+  addBuddyButton: {
+    marginTop: spacing.sm,
   },
   buttonContainer: {
     marginTop: spacing.xxl,
